@@ -39,9 +39,13 @@ function (smiles, k = 50, seed = 12345, max_nc = 30,
   res = list(kodama = list(visualization = res.kodama.visualization), 
              hclust = res.hclust)
   clusters = tree.cutting(res, max_nc = max_nc)$clusters
+
+  main_cluster = which.max(clusters) + 1
+
+          
   rownames(res.kodama.visualization)=names(smiles)
   return(list(visualization = res.kodama.visualization, clusters = clusters, 
-              silhouette = clu_list_mean, silhoutte_rep = clu_list, 
+              silhouette = clusters,
               max_nc = max_nc, min_nc = min_nc, hclust = res.hclust, 
               main_cluster = main_cluster)) 
 }
