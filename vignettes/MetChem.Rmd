@@ -289,8 +289,9 @@ In the next step, we apply the Weighted Metabolite Chemical Similarity Analysis 
  \newpage
 
 
-Differential analysis of the relevant modules can be performed using the function `multi_analysis` present in the R package `KODAMA`. In the example below, we perform a differential analysis between MYC transgenic mice fed with a high-fat diet or a control diet named MYC_HFD and MYC_CTD, respectively.
+Differential analysis of the relevant modules can be performed using the function `multi_analysis` present in the R package `clinalyze`. In the example below, we perform a differential analysis between MYC transgenic mice fed with a high-fat diet or a control diet named MYC_HFD and MYC_CTD, respectively.
 
+    library("clinalyze")
     label=rep(c("MYC","WT"),each=12)
     multi_analysis(t(ww),label)
    
