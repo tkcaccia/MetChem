@@ -20,7 +20,7 @@ A vector of smile notations.
 The method used to calculated the distance between molecular fingerprint ("tanimoto" as default). For more information see  \code{\link[fingerprint]{fp.sim.matrix}} function. 
 }
 \item{type}{
-The type of fingerprint applied to the SMILEs ("extended" as default). For more information see  \code{\link[fingerprint]{get.fingerprint}} function.
+The type of fingerprint applied to the SMILEs ("extended" as default). For more information see  \code{\link[rcdk]{get.fingerprint}} function.
 }
 }
 
@@ -30,7 +30,7 @@ The type of fingerprint applied to the SMILEs ("extended" as default). For more 
 }
 
 \seealso{
-  \code{\link[fingerprint]{fp.sim.matrix}}, \code{\link[fingerprint]{get.fingerprint}}, 
+  \code{\link[fingerprint]{fp.sim.matrix}}, \code{\link[rcdk]{get.fingerprint}}, 
 }
 \examples{
 
