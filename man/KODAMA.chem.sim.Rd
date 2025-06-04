@@ -4,7 +4,7 @@
 KODAMA chemical similarity.
 }
 \description{
-This function calculates the structural similarity between different metabolites and perform hierarchical clustering using the KODAMA algorithm.
+This function calculates the structural similarity between different metabolites and performs hierarchical clustering using the KODAMA algorithm.
 }
 \usage{
 
@@ -34,10 +34,10 @@ A number of components of multidimensional scaling.
 Optional parameters for  \code{\link{chemical.dissimilarity}} function.
 }
 \item{kodama.matrix.parameters}{
-Optional parameters for  \code{\link{KODAMA.matrix}} function.
+Optional parameters for  \code{\link[KODAMA]{KODAMA.matrix}} function.
 }
 \item{kodama.visualization.parameters}{
-Optional parameters for  \code{\link{KODAMA.visualization}} function.
+Optional parameters for  \code{\link[KODAMA]{KODAMA.visualization}} function.
 }
 \item{hclust.parameters}{
 Optional parameters for  \code{\link{hclust}} function.
@@ -51,7 +51,7 @@ Optional parameters for  \code{\link{hclust}} function.
 
 
 \seealso{
-  \code{\link[KODAMA]{KODAMA.matrix}}
+  \code{\link[KODAMA]{KODAMA.matrix}}, \code{\link[KODAMA]{KODAMA.visualization}}, 
 }
 
 \examples{
