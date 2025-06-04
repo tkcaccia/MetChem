@@ -10,7 +10,7 @@ This function calculates the structural similarity between different metabolites
 
 
 clusters.detection  (smiles,
-                     repetition=10,
+                     repetition=1,
                      k=50,
                      seed=12345,
                      max_nc = 30,
@@ -27,10 +27,10 @@ clusters.detection  (smiles,
 A list of smile notations for the study metabolites dataset.
 }
 \item{repetition}{
-The number of time the KODAMA analysis is repeated. 
+The number of times the KODAMA analysis is repeated. 
 }
 \item{k}{
-A number of components of multidimensional scaling.
+The number of components of multidimensional scaling.
 }
 \item{seed}{
 Seed for the generation of random numbers.
