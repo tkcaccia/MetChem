@@ -1,6 +1,6 @@
 
 clusters.detection =
-  function (smiles, repetition = 10, k = 50, seed = 12345, max_nc = 30, 
+  function (smiles, repetition = 1, k = 50, seed = 12345, max_nc = 30, 
             dissimilarity.parameters = list(), kodama.matrix.parameters = list(), 
             kodama.visualization.parameters = list(), hclust.parameters = list(method = "ward.D"), 
             verbose = TRUE) 
