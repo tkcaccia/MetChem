@@ -27,6 +27,7 @@ function (smiles, k = 50, seed = 12345, max_nc = 30,
   kodama.matrix.parameters$data = cc
   kodama.matrix.parameters$landmarks = 20000
   kodama.matrix.parameters$seed= seed
+  kodama.matrix.parameters$FUN="simpls"
   res.kodama.matrix = do.call("KODAMA.matrix", kodama.matrix.parameters)
   
   kodama.visualization.parameters$kk = res.kodama.matrix
