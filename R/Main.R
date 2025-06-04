@@ -1,84 +1,50 @@
 
-clusters.detection =
-  function (smiles, repetition = 1, k = 50, seed = 12345, max_nc = 30, 
-            dissimilarity.parameters = list(), kodama.matrix.parameters = list(), 
-            kodama.visualization.parameters = list(), hclust.parameters = list(method = "ward.D"), 
-            verbose = TRUE) 
-  {
-    min_nc = 2
-    if (length(smiles) <= 25) {
-      stop("The number of SMILEs must be higher than 25")
-    }
-    if (max_nc > (length(smiles)/2)) {
-      stop("The maximum number of cluster is too high")
-    }
-    k_data = length(smiles) - 1
-    if (k > k_data) {
-      k = k_data
-      warnings("Since k exceed the number of entries, the number of components will be reduced to", 
-               k_data)
-    }
-    dissimilarity.parameters$smiles = smiles
-    if (verbose) {
-      print("Generation of chemical structural dissimilarity matrix.")
-    }
-    di = do.call("chemical.dissimilarity", dissimilarity.parameters)
-    cc = cmdscale(as.dist(di), k = k)
-    kodama.matrix.parameters$data = cc
-    kodama.matrix.parameters$landmarks = 20000
-    set.seed(seed)
-    clu_list = matrix(ncol = max_nc - 1, nrow = repetition)
-    dissimilarity = matrix(0, nrow = length(smiles), ncol = length(smiles))
-    if (verbose) {
-      print(paste("Repeatition of", repetition, "KODAMA analysis"))
-    }
-    for (i in 1:repetition) {
-      if (verbose) {
-        print(paste("Repeatition #", i))
-      }
-      res.kodama.matrix = do.call("KODAMA.matrix", kodama.matrix.parameters)
-      dissimilarity = dissimilarity + res.kodama.matrix$dissimilarity
-      kodama.visualization.parameters$kk = res.kodama.matrix
-      res.kodama.visualization = do.call("KODAMA.visualization", 
-                                         kodama.visualization.parameters)
-      hclust.parameters$d = dist(res.kodama.visualization)
-      res.hclust = do.call("hclust", hclust.parameters)
-      res_list = list(kodama = list(matrix = res.kodama.matrix, 
-                                    visualization = res.kodama.visualization), hclust = res.hclust)
-      clu_list[i, ] = tree.cutting(res_list, max_nc = max_nc)$res.S
-    }
-    dissimilarity = dissimilarity/repetition
-    clu_list_mean = colMeans(clu_list)
-    main_cluster = which.max(clu_list_mean) + 1
-    neighbors = res.kodama.matrix$knn_Armadillo$neighbors
-    mam = dissimilarity
-    knn_Armadillo = list()
-    knn_Armadillo$nn_index = matrix(ncol = ncol(mam), nrow = nrow(mam))
-    for (i_tsne in 1:nrow(kodama.matrix.parameters$data)) {
-      oo_tsne = order(mam[i_tsne, ])
-      mam[i_tsne, ] = mam[i_tsne, oo_tsne]
-      knn_Armadillo$nn_index[i_tsne, ] = oo_tsne
-    }
-    knn_Armadillo$nn_index = knn_Armadillo$nn_index[, -1][, 1:neighbors]
-    knn_Armadillo$distances = mam[, -1][, 1:neighbors]
-    knn_Armadillo$neighbors = neighbors
-    kodama.visualization.parameters$kk$dissimilarity = dissimilarity
-    kodama.visualization.parameters$kk$knn_Armadillo = knn_Armadillo
-    kodama.visualization.parameters$kk = res.kodama.matrix
-    res.kodama.visualization = do.call("KODAMA.visualization", 
-                                       kodama.visualization.parameters)
-    hclust.parameters$d = dist(res.kodama.visualization)
-    res.hclust = do.call("hclust", hclust.parameters)
-    res = list(kodama = list(visualization = res.kodama.visualization), 
-               hclust = res.hclust)
-    clusters = tree.cutting(res, max_nc = max_nc)$clusters
-    rownames(res.kodama.visualization)=names(smiles)
-    return(list(visualization = res.kodama.visualization, clusters = clusters, 
-                silhouette = clu_list_mean, silhoutte_rep = clu_list, 
-                max_nc = max_nc, min_nc = min_nc, hclust = res.hclust, 
-                main_cluster = main_cluster))
+clusters.detection = 
+function (smiles, k = 50, seed = 12345, max_nc = 30, 
+          dissimilarity.parameters = list(), kodama.matrix.parameters = list(), 
+          kodama.visualization.parameters = list(), hclust.parameters = list(method = "ward.D"), 
+          verbose = TRUE) 
+{
+  min_nc = 2
+  if (length(smiles) <= 25) {
+    stop("The number of SMILEs must be higher than 25")
   }
-
+  if (max_nc > (length(smiles)/2)) {
+    stop("The maximum number of cluster is too high")
+  }
+  k_data = length(smiles) - 1
+  if (k > k_data) {
+    k = k_data
+    warnings("Since k exceed the number of entries, the number of components will be reduced to", 
+             k_data)
+  }
+  dissimilarity.parameters$smiles = smiles
+  if (verbose) {
+    print("Generation of chemical structural dissimilarity matrix.")
+  }
+  di = do.call("chemical.dissimilarity", dissimilarity.parameters)
+  cc = cmdscale(as.dist(di), k = k)
+  kodama.matrix.parameters$data = cc
+  kodama.matrix.parameters$landmarks = 20000
+  kodama.matrix.parameters$seed= seed
+  res.kodama.matrix = do.call("KODAMA.matrix", kodama.matrix.parameters)
+  
+  kodama.visualization.parameters$kk = res.kodama.matrix
+  res.kodama.visualization = do.call("KODAMA.visualization", 
+                                      kodama.visualization.parameters)
+  
+  hclust.parameters$d = dist(res.kodama.visualization)
+  res.hclust = do.call("hclust", hclust.parameters)
+  res = list(kodama = list(visualization = res.kodama.visualization), 
+             hclust = res.hclust)
+  clusters = tree.cutting(res, max_nc = max_nc)$clusters
+  rownames(res.kodama.visualization)=names(smiles)
+  return(list(visualization = res.kodama.visualization, clusters = clusters, 
+              silhouette = clu_list_mean, silhoutte_rep = clu_list, 
+              max_nc = max_nc, min_nc = min_nc, hclust = res.hclust, 
+              main_cluster = main_cluster)) 
+}
+  
 
   
 
