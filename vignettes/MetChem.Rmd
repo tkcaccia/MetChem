@@ -9,7 +9,7 @@ output:
     highlight: null
     toc: true
     number_sections: false
-    fig_caption: yes
+    fig_caption: true
   word_document: default
 vignette: |
   %\VignetteIndexEntry{A simple pipeline to explore structural similarities between metabolites}   
