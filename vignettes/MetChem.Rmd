@@ -118,16 +118,17 @@ Heatmap visualization is generated using the function `pheatmap`. Metabolites ar
                       group=c(MYC_CTD="#373898ff",MYC_HFD="#c11630ff",
                               WT_CTD="#00a4cfff",WT_HFD="#e40a81ff"))
 
-    set.seed(1)
-    kk1=KODAMA.matrix(t(met))
-    col=KODAMA.visualization(kk1)
+    config=umap.defaults
+    config$n_neighbors=5
+    kk1=KODAMA.matrix(t(met),ncomp=10)
+    col=KODAMA.visualization(kk1,config=config)
     hcol=hclust(dist(col),method="ward.D")
-
-    kk2=KODAMA.matrix(scale(met))
+    kk2=KODAMA.matrix(scale(met),ncomp=10)
     row=KODAMA.visualization(kk2)
     hrow=hclust(dist(row),method="ward.D")
     my_sample_col <- data.frame(group = label,genotype=label_MYC)
     row.names(my_sample_col) <- colnames(met)
+
 
     pheatmap(met,
              cluster_cols = hcol,
@@ -145,13 +146,13 @@ Heatmap visualization is generated using the function `pheatmap`. Metabolites ar
 
   \newpage
  
-To analyze the chemical similarities among metabolites, we need the Simplified Molecular-Input Line-Entry System (SMILES) of each metabolite is obtained. The SMILES of the previous data set is stored in the list `HFD` that can be loaded using the function `data(HFD)`. `MetChem` package includes the `modules.detection` function based on KODAMA analysis.  This function repeats the follwing steps (10 times as default): i) transformation of the chemical structure dissimilarity matrix in a multidimensional space (with 50 dimensions as defaults) using multidimensional scaling; ii) KODAMA features extraction; iii) hierarchical clustering based on the KODAMA output; iv) Calculation of the silhoutte index from different number of clusters (from 2 to 30 as default). The average of the siloutte index is calculated for each cluster numbers to identity the optimal cluster number.
+To analyze the chemical similarities among metabolites, we need the Simplified Molecular-Input Line-Entry System (SMILES) of each metabolite. The SMILES of the previous data set are stored in the list `HFD` that can be loaded using the function `data(HFD)`. The `MetChem` package includes the `clusters.detection` function based on KODAMA analysis.  This function repeats the follwing steps (10 times as default): i) transformation of the chemical structure dissimilarity matrix in a multidimensional space (with 50 dimensions as defaults) using multidimensional scaling; ii) KODAMA features extraction; iii) hierarchical clustering based on the KODAMA output; iv) Calculation of the silhoutte index from different number of clusters (from 2 to 30 as default). The average of the silhouette index is calculated for each cluster number to identify the optimal cluster number.
 
     data(HFD)
     met=met[rownames(HFD),]
     SMILES=HFD$SMILES
     names(SMILES)=rownames(HFD)
-    clu=modules.detection(SMILES)
+    clu=clusters.detection(SMILES)
     plot(clu$min_nc:clu$max_nc,clu$silhouette,type="l",
          ylab="Rousseeuw's Silhouette index",xlab="Number of clusters")
     abline(v=5*(1:6),lty=2)
@@ -166,13 +167,13 @@ To analyze the chemical similarities among metabolites, we need the Simplified M
 
  \newpage
 
-Based on the average Silhouette indeces, we have the optimal number of cluster for this data set is 8. Below is shown a graphical visualization of the final output of KODAMA. Each cluster is represented by a different color code. Each dot represents a different metabolite. Metabolites that are located near to each other share a similar chemical structure.
+Based on the average Silhouette indices, we have the optimal number of clusters for this data set is 8. Below is shown a graphical visualization of the final output of KODAMA. Each cluster is represented by a different color code. Each dot represents a different metabolite. Metabolites that are located near each other share a similar chemical structure.
 
     plot(clu$visualization,pch=21,bg=rainbow(8,alpha = 0.7)[clu$clusters[,"Clusters 8"]],cex=2)
     legend(-30, 20, legend=paste("Cluster", unique(clu$clusters[,"Clusters 8"])),
        col= rainbow(8,alpha = 0.7), pch= 16, cex=1)
        
-The following line code can be used to identify the points on the scatter plot. The cluster belonging and chemical name of the selected points will be displayed. ESC key to terminate the command.
+The following code can be used to identify the points on the scatter plot. The cluster belonging and chemical name of the selected points will be displayed. ESC key to terminate the command.
     
     data.frame(metabolite=rownames(met),
                cluster=clu$clusters[,"Clusters 8"])[identify(clu$visualization),]
@@ -232,7 +233,7 @@ A new heatmap is generated where metabolites are clustered according to their ch
  \newpage
 
 
-We next build a heatmap of the metabolite belonging to the cluster 4.
+We next build a heatmap of the metabolites belonging to cluster 4.
 
     sel=clu$clusters[,"Clusters 8"]==4
     met.sel=met[sel,] 
@@ -260,7 +261,7 @@ We next build a heatmap of the metabolite belonging to the cluster 4.
 
  \newpage
 
-In the next step, we apply the Weighted Metabolite Chemical Similarity Analysis (WMCSA) on all branches of the hierarchical clustering performed on the cluster 4. WMCSA is implemented in the function `WMCSA`. This function summarizes the relative concentration of metabolites within each module. Each module is defined according to the chemical similarity. 
+In the next step, we apply the Weighted Metabolite Chemical Similarity Analysis (WMCSA) on all branches of the hierarchical clustering performed on cluster 4. WMCSA is implemented in the function `WMCSA`. This function summarizes the relative concentration of metabolites within each module. Each module is defined according to chemical similarity. 
 
 
 
@@ -288,7 +289,7 @@ In the next step, we apply the Weighted Metabolite Chemical Similarity Analysis 
  \newpage
 
 
-Differential analysis of the relevant modules can be performed using the function `multi_analysis` present in the R package `KODAMA`. In the example below, we perform a differential analysis between MYC transgenic mice fed with high-fat diet or control diet named as MYC_HFD and MYC_CTD, respectively.
+Differential analysis of the relevant modules can be performed using the function `multi_analysis` present in the R package `KODAMA`. In the example below, we perform a differential analysis between MYC transgenic mice fed with a high-fat diet or a control diet named MYC_HFD and MYC_CTD, respectively.
 
     label=rep(c("MYC","WT"),each=12)
     multi_analysis(t(ww),label)
@@ -339,7 +340,7 @@ To visualize the metabolite of , for example, module 12, we can type:
 
     cl[[12]]
     
-Fisher's test was used to rank the association of each module to the metabolite information. Below are reported the p-value for associations of substituents with the module 12. 
+Fisher's test was used to rank the association of each module to the metabolite information. Below are reported the p-value for associations of substituents with module 12. 
 
     substituents[[12]]
 
@@ -379,7 +380,7 @@ knitr::kable(da, align = "lc")
 Ebtesam Abdel-Shafy, Tadele Melak, David A. MacIntyre, Giorgia Zadra, Luiz F. Zerbini, Silvano Piazza, and Stefano Cacciatore 
 Publication in submission
 
-To obtain BibTex entries of the two references, you can enter the following into your R session to Bibtex `citation("MetChem")`.
+To obtain BibTex entries of the two references, you can enter the following into your R session to BibTex `citation("MetChem")`.
 
 
 
