@@ -10,7 +10,6 @@ This function calculates the structural similarity between different metabolites
 
 
 clusters.detection  (smiles,
-                     repetition=1,
                      k=50,
                      seed=12345,
                      max_nc = 30,
