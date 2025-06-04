@@ -51,7 +51,7 @@ Optional parameters for  \code{\link{hclust}} function.
 
 
 \seealso{
-  \code{\link{KODAMA.matrix}}
+  \code{\link[KODAMA]{KODAMA.matrix}}
 }
 
 \examples{
