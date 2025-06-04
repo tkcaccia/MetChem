@@ -7,7 +7,8 @@ date: "`r Sys.Date()`"
 output:
   pdf_document:
     highlight: null
-    number_sections: no
+    toc: true
+    number_sections: false
     fig_caption: yes
   word_document: default
 vignette: |
