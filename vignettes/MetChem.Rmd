@@ -60,7 +60,7 @@ The package downloadable from CRAN was built using R version, R.4.2.1. The packa
 
 ## 3  Getting Started 
 
-The R package MetChem depends by the R package rcdk, which is partially implemented in Java. In Windows environment, we reported an issue related to the uploading of rcdk package. It can be solved running the following code before loading the package MetChem.
+The R package MetChem depends on the R package rcdk, which is partially implemented in Java. In Windows environment, we reported an issue related to the uploading of rcdk package. It can be solved by running the following code before loading the package MetChem.
 
     replacement <- function(category = "LC_ALL") {
       if (identical(category, "LC_MESSAGES"))
@@ -91,7 +91,7 @@ The package includes both a user manual (this document) and a reference manual (
  
 ## 4  Example 1: murine prostate tissues metabolic profile 
 
-Here, we introduce an example for the analysis of metabolic structural information using MetChem package. For this, we used a data set of mass spectrometry dataset obtained from murine prostate tissue samples reported by Labbé and Zadra \emph{et al.} (2019) (Supplementary Data 2). The metabolic data are obtained from ventral prostate tissues of mice that overexpress a human c-MYC transgene (MYC) in the prostate epithelium and wild-type littermates (WT). Mice were fed either a high fat diet (HFD; 60% kcal from fat; lard—rich in saturated fat) or a control diet (CTD; 10% kcal from fat). The data set includes six replicates for each group (\emph{i.e.}, WT_CTD, MYC_CTD, WT_HFD, and MYC_HFD). To begin, download the data from the Labbé and Zadra (2019) study. Download it and save it to your hard disk.
+Here, we introduce an example for the analysis of metabolic structural information using the MetChem package. For this, we used a data set of mass spectrometry dataset obtained from murine prostate tissue samples reported by Labbé and Zadra \emph{et al.} (2019) (Supplementary Data 2). The metabolic data are obtained from ventral prostate tissues of mice that overexpress a human c-MYC transgene (MYC) in the prostate epithelium and wild-type littermates (WT). Mice were fed either a high-fat diet (HFD; 60% kcal from fat; lard—rich in saturated fat) or a control diet (CTD; 10% kcal from fat). The data set includes six replicates for each group (\emph{i.e.}, WT_CTD, MYC_CTD, WT_HFD, and MYC_HFD). To begin, download the data from the Labbé and Zadra (2019) study. Download it and save it to your hard disk.
 Metabolomic data is extracted using the instructions below. Data is then imputed using a k-nearest neighbour (kNN) algorithm using the function `impute` as described in the publication.
 
     require("readxl")
@@ -120,10 +120,10 @@ Heatmap visualization is generated using the function `pheatmap`. Metabolites ar
 
     config=umap.defaults
     config$n_neighbors=5
-    kk1=KODAMA.matrix(t(met),ncomp=10)
+    kk1=KODAMA.matrix(t(met),ncomp=10,FUN="simpls")
     col=KODAMA.visualization(kk1,config=config)
     hcol=hclust(dist(col),method="ward.D")
-    kk2=KODAMA.matrix(scale(met),ncomp=10)
+    kk2=KODAMA.matrix(scale(met),ncomp=10,FUN="simpls")
     row=KODAMA.visualization(kk2)
     hrow=hclust(dist(row),method="ward.D")
     my_sample_col <- data.frame(group = label,genotype=label_MYC)
@@ -140,7 +140,7 @@ Heatmap visualization is generated using the function `pheatmap`. Metabolites ar
  
 \begin{figure}[h]
   \centerline{\includegraphics[width=12cm]{KODAMApaper.pdf}}
-  \caption{Heatmap of metabolites with hierarchical clustering based on their concentratrion.}
+  \caption{Heatmap of metabolites with hierarchical clustering based on their concentration.}
   \label{fig:F1}
 \end{figure}
 
@@ -204,10 +204,10 @@ A new heatmap is generated where metabolites are clustered according to their ch
     my_sample_row <- data.frame(cluster = as.character(clusters8))
     row.names(my_sample_row) <- rownames(met)
 
-    set.seed(1)
+
     met=met[rownames(HFD),] 
-    kk1=KODAMA.matrix(t(met))
-    col=KODAMA.visualization(kk1)
+    kk1=KODAMA.matrix(t(met),ncomp=10,FUN="simpls")
+    col=KODAMA.visualization(kk1,config=config)
     hcol=hclust(dist(col),method="ward.D")
     hrow=clu$hclust
 
@@ -265,7 +265,7 @@ In the next step, we apply the Weighted Metabolite Chemical Similarity Analysis 
 
 
 
-    set.seed(1)
+
     my_sample_col <- data.frame(group = label,genotype=label_MYC)
     row.names(my_sample_col) <- colnames(met)
     cl=allbranches(hrow.sel)
