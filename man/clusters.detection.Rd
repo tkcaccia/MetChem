@@ -4,7 +4,7 @@
 Detection of clusters.
 }
 \description{
-This function calculates the structural similarity between different metabolites and perform hierarchical clustering using the KODAMA algorithm and detect the optimal number of clusters. The procedure is repeated to ensure the robustness of the detection.
+This function calculates the structural similarity between different metabolites, performs hierarchical clustering using the KODAMA algorithm, and detects the optimal number of clusters. The procedure is repeated to ensure the robustness of the detection.
 }
 \usage{
 
@@ -24,9 +24,6 @@ clusters.detection  (smiles,
 \arguments{
 \item{smiles}{
 A list of smile notations for the study metabolites dataset.
-}
-\item{repetition}{
-The number of times the KODAMA analysis is repeated. 
 }
 \item{k}{
 The number of components of multidimensional scaling.
